@@ -1,0 +1,6 @@
+beautifulsoup4>=4.12.3
+fire>=0.7.0
+httpx>=0.27.2
+loguru>=0.7.2
+setuptools>=68.2.2
+
