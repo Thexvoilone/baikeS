@@ -1,3 +1,4 @@
+import os, shutil, sys
 from setuptools import setup, find_packages
 
 
@@ -9,12 +10,17 @@ URL = "https://github.com/Thexvoilone/baikes"
 EMAIL = "voilone@qq.com"
 AUTHOR = "Voilone"
 REQUIRES_PYTHON = ">=3.10.10"
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 REQUIRED = ["httpx", "loguru", "bs4", "fire"]
 
 with open("README.md", "r", encoding="utf-8") as f:
     LONG_DESCRIPTION = f.read()
+
+build_dirs = ["baikes.egg-info", "build", "dist"]
+for d in build_dirs:
+    if os.path.exists(d):
+        shutil.rmtree(d)
 
 setup(
     name=NAME,
