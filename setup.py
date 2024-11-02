@@ -11,7 +11,7 @@ AUTHOR = "Voilone"
 REQUIRES_PYTHON = ">=3.10.10"
 VERSION = "0.1.0"
 
-REQUIRED = ["httpx", "loguru", "bs4"]
+REQUIRED = ["httpx", "loguru", "bs4", "fire"]
 
 with open("README.md", "r", encoding="utf-8") as f:
     LONG_DESCRIPTION = f.read()
