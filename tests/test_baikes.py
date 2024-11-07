@@ -35,6 +35,7 @@ def test_all_members():
     assert baike.album != None
     assert len(baike.card.keys()) > 0
     assert len(baike.paragraphs.keys()) > 0
+    assert baike.__str__() != ""
 
     sleep(1)
 

@@ -9,7 +9,7 @@ from loguru import logger
 from bs4 import ResultSet, Tag
 
 
-from .provider import SourceProvider
+from baikes.provider import SourceProvider
 
 
 BaikeCategory: TypeAlias = Literal[
@@ -252,16 +252,15 @@ class Baike:
         return di
 
     def __str__(self) -> str:
-        self.get_all()
         output = ""
 
         output += f"Title: {self.title}\n"
         output += f"Name: {self.name}\n"
-        output += f"Album: {self.__album}\n"
-        output += f"Intro: \t{self.__intro}\n"
+        output += f"Album: {self.album}\n"
+        output += f"Intro: \t{self.intro}\n"
 
-        card = self.__ord_di_str(self.__card, "\t")
-        paragraphs = self.__ord_di_str(self.__paragraphs)
+        card = self.__ord_di_str(self.card, "\t")
+        paragraphs = self.__ord_di_str(self.paragraphs)
 
         output += f"Card: \n{card}"
         output += f"Paragraphs: \n{paragraphs}"
