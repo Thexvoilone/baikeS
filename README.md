@@ -22,8 +22,7 @@ pip install baike-spider
 
 #### 模块
 
-一次性解析全部:
-该方法会一次性解析全部的数据并存储进对象属性中
+获取你想要的数据
 
 ```py
 from baikes import Baike
@@ -36,19 +35,18 @@ print(baike.paragraphs)
 # ...
 ```
 
-部分解析:
-当你只需爬取部分数据时, 该方法能会降低部分性能损耗
+`Baike` 对象包含以下属性:
 
-```py
-from baikes import Baike
+|   属性名   |     类型      |    描述    |
+| :--------: | :-----------: | :--------: |
+|    name    |     `str`     |  条目名称  |
+|   title    |     `str`     |  条目标题  |
+|   album    |     `str`     | 概述图 URL |
+|   intro    |     `str`     |    简介    |
+|    card    | `OrderedDict` |  知识卡片  |
+| paragraphs | `OrderedDict` |  描述段落  |
 
-baike = Baike("网络爬虫", once=Flase)
-intro = baike.get_intro()
-
-print(intro)
-```
-
-有时会出现同名词, 参数 category 用于限定词条分类:
+有时可能会出现同名词, 参数 category 用于限定词条分类:
 
 ```py
 from baikes import Baike
@@ -71,11 +69,6 @@ python -m baikes -n "网络爬虫"
 # 限定词条分类
 python -m baikes -n "黄蜂" -c "动物"
 
-# 一次性解析:
 # 获取百科卡片
 python -m baikes -n "网络爬虫" card
-
-# 部分解析:
-# 获取百科简介
-python -m baikes -n "网络爬虫" -o False get_card
 ```

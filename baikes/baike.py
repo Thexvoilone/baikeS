@@ -9,15 +9,27 @@ from loguru import logger
 from bs4 import ResultSet, Tag
 
 
-from baikes.provider import SourceProvider
+from .provider import SourceProvider
 
 
-BaikeCategory: TypeAlias = Literal["企业", "动物", "品牌", "书刊", "数字产品", "影视作品", "音乐作品", "植物", "其它", "其他"]
+BaikeCategory: TypeAlias = Literal[
+    "企业",
+    "动物",
+    "品牌",
+    "书刊",
+    "数字产品",
+    "影视作品",
+    "动漫作品",
+    "音乐作品",
+    "植物",
+    "其它",
+    "其他",
+]
 
 
 class Baike:
 
-    def __init__(self, name: str, category: BaikeCategory | None = None, once: bool = True):
+    def __init__(self, name: str, category: BaikeCategory | None = None):
         """
         百度百科
 
@@ -47,17 +59,14 @@ class Baike:
         self.title = self.__provider.soup.find("title").string
         "百科标题"
 
-        self.album: str | None = None
+        self.__album: str | None = None
         "概述图 URL"
-        self.intro: str | None = None
+        self.__intro: str | None = None
         "简介"
-        self.card: OrderedDict | None = None
+        self.__card: OrderedDict | None = None
         "知识卡片"
-        self.paragraphs: OrderedDict | None = None
+        self.__paragraphs: OrderedDict | None = None
         "百科段落"
-
-        if once:
-            self.get_all()
 
     def __concat(self, str_list: list[str]) -> str:
         result = ""
@@ -110,23 +119,26 @@ class Baike:
         except:
             logger.error("Fail to parse html text")
 
-    def get_all(self):
-        """
-        解析当前条目的所有数据, 并返回对象本身
+    # use @property to define a getter
+    @property
+    def intro(self) -> str | None:
+        if self.__intro != None:
+            return self.__intro
 
-        :return: Baike
-        :rtype: Baike 对象
-        """
-        self.get_album()
-        self.get_intro()
-        self.get_card()
-        self.get_paragraphs()
+        soup = self.__provider.soup
 
-        return self
+        intro = soup.find(class_="J-summary")
+        if intro != None:
+            intro_text = re.sub(r"\[.*?\]", "", intro.text)
+            self.__intro = intro_text
+            return intro_text
 
-    def get_album(self) -> str | None:
-        if self.album != None:
-            return self.album
+        return None
+
+    @property
+    def album(self) -> str | None:
+        if self.__album != None:
+            return self.__album
 
         pagedata = self.__pagedata
 
@@ -140,28 +152,16 @@ class Baike:
         except:
             logger.error(f"'{self.name}' has no album")
 
-        self.album = album_src
+        self.__album = album_src
         return album_src
 
-    def get_intro(self) -> str | None:
-        if self.intro != None:
-            return self.intro
-
-        soup = self.__provider.soup
-
-        intro = soup.find(class_="J-summary")
-        if intro != None:
-            intro_text = re.sub(r"\[.*?\]", "", intro.text)
-            self.intro = intro_text
-            return intro_text
-
-        return None
-
-    def get_card(self) -> OrderedDict:
-        if self.card != None:
-            return self.card
+    @property
+    def card(self) -> OrderedDict:
+        if self.__card != None:
+            return self.__card
 
         pagedata = self.__pagedata
+        # TODO 可能会出现无 card 的情况
         card = pagedata["card"]
         left: list = card["left"]
         right: list = card["right"]
@@ -190,12 +190,13 @@ class Baike:
 
             di[title] = text
 
-        self.card = di
+        self.__card = di
         return di
 
-    def get_paragraphs(self) -> OrderedDict:
-        if self.paragraphs != None:
-            return self.paragraphs
+    @property
+    def paragraphs(self) -> OrderedDict:
+        if self.__paragraphs != None:
+            return self.__paragraphs
 
         soup = self.__provider.soup
 
@@ -204,6 +205,7 @@ class Baike:
             tag: Tag
             if not tag.get("name"):
                 continue
+
             title_idx = int(tag["name"]) - 1
             title = tag.text
 
@@ -246,7 +248,7 @@ class Baike:
 
             di[title] = desc
 
-        self.paragraphs = di
+        self.__paragraphs = di
         return di
 
     def __str__(self) -> str:
@@ -255,11 +257,11 @@ class Baike:
 
         output += f"Title: {self.title}\n"
         output += f"Name: {self.name}\n"
-        output += f"Album: {self.album}\n"
-        output += f"Intro: \t{self.intro}\n"
+        output += f"Album: {self.__album}\n"
+        output += f"Intro: \t{self.__intro}\n"
 
-        card = self.__ord_di_str(self.card, "\t")
-        paragraphs = self.__ord_di_str(self.paragraphs)
+        card = self.__ord_di_str(self.__card, "\t")
+        paragraphs = self.__ord_di_str(self.__paragraphs)
 
         output += f"Card: \n{card}"
         output += f"Paragraphs: \n{paragraphs}"
