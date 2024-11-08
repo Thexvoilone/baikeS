@@ -10,7 +10,7 @@ URL = "https://github.com/Thexvoilone/baikes"
 EMAIL = "voilone@qq.com"
 AUTHOR = "Voilone"
 REQUIRES_PYTHON = ">=3.10.10"
-VERSION = "0.1.3"
+VERSION = "0.1.4"
 
 REQUIRED = ["httpx", "loguru", "bs4", "fire"]
 

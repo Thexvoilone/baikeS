@@ -1,4 +1,6 @@
-## baike-spider
+## baikeS
+
+baidu-baike-spider
 
 百度百科简易爬虫
 
@@ -11,7 +13,7 @@
 ### 安装
 
 ```bash
-pip install baike-spider
+pip install baikes
 ```
 
 ---

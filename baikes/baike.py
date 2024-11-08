@@ -35,7 +35,6 @@ class Baike:
 
         :param name: 百科条目
         :param category: 百科分类
-        :param once: 是否一次性解析
         """
         self.__provider = SourceProvider(name)
         self.name = name
@@ -59,14 +58,10 @@ class Baike:
         self.title = self.__provider.soup.find("title").string
         "百科标题"
 
-        self.__album: str | None = None
-        "概述图 URL"
-        self.__intro: str | None = None
-        "简介"
-        self.__card: OrderedDict | None = None
-        "知识卡片"
-        self.__paragraphs: OrderedDict | None = None
-        "百科段落"
+        self.__album: str | None = None  # 概述图 URL
+        self.__intro: str | None = None  # 简介
+        self.__card: OrderedDict | None = None  # 知识卡片
+        self.__paragraphs: OrderedDict | None = None  # 百科段落
 
     def __concat(self, str_list: list[str]) -> str:
         result = ""
@@ -122,6 +117,9 @@ class Baike:
     # use @property to define a getter
     @property
     def intro(self) -> str | None:
+        """
+        简介
+        """
         if self.__intro != None:
             return self.__intro
 
@@ -137,6 +135,9 @@ class Baike:
 
     @property
     def album(self) -> str | None:
+        """
+        概述图 URL
+        """
         if self.__album != None:
             return self.__album
 
@@ -157,6 +158,9 @@ class Baike:
 
     @property
     def card(self) -> OrderedDict:
+        """
+        知识卡片
+        """
         if self.__card != None:
             return self.__card
 
@@ -195,6 +199,9 @@ class Baike:
 
     @property
     def paragraphs(self) -> OrderedDict:
+        """
+        百科段落
+        """
         if self.__paragraphs != None:
             return self.__paragraphs
 
