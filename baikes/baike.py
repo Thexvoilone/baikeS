@@ -11,7 +11,6 @@ from bs4 import ResultSet, Tag
 
 from baikes.provider import SourceProvider
 
-
 BaikeCategory: TypeAlias = Literal[
     "企业",
     "动物",
@@ -210,16 +209,17 @@ class Baike:
         di = OrderedDict()
         for tag in soup.find_all("h2"):
             tag: Tag
-            if not tag.get("name"):
+            tag_wrapper = tag.parent
+
+            if not tag_wrapper.has_attr("data-name"):
                 continue
 
-            title_idx = int(tag["name"]) - 1
+            title_idx = int(tag_wrapper.get("data-index")) - 1
             title = tag.text
 
             desc = ""
             ih3 = 1
             ipragraph = 1
-
             for i in range(1, 3):
                 ipragraph = i
                 div = soup.find(attrs={"data-idx": f"{title_idx}-{ipragraph}"})  # data-index h3 标题
